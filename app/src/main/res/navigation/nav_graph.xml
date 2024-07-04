@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/authFragment">
+
+    <fragment
+        android:id="@+id/authFragment"
+        android:name="com.example.githubrepoviewer.ui.auth.AuthFragment"
+        android:label="AuthFragment" >
+        <action
+            android:id="@+id/action_authFragment_to_repositoriesListFragment"
+            app:destination="@id/repositoriesListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/repositoriesListFragment"
+        android:name="com.example.githubrepoviewer.ui.repositories.RepositoriesListFragment"
+        android:label="RepositoriesListFragment" >
+        <action
+            android:id="@+id/action_repositoriesListFragment_to_detailInfoFragment"
+            app:destination="@id/detailInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailInfoFragment"
+        android:name="com.example.githubrepoviewer.ui.detail.DetailInfoFragment"
+        android:label="DetailInfoFragment" />
+</navigation>
