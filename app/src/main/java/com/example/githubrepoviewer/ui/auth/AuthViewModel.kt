@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.githubrepoviewer.data.KeyValueStorage
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -14,8 +16,12 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import javax.inject.Inject
 
-class AuthViewModel : ViewModel() {
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val keyValueStorage: KeyValueStorage
+) : ViewModel() {
 
     val token: MutableLiveData<String> = MutableLiveData("")
 
@@ -28,10 +34,15 @@ class AuthViewModel : ViewModel() {
     private val tokenPattern = Regex("^[A-Za-z0-9_]{0,255}$")
     private var tokenChangeJob: Job? = null
 
+    init {
+        token.value = keyValueStorage.authToken
+    }
+
     private var i = 0
     fun onSignButtonPressed() {
         viewModelScope.launch(Dispatchers.IO) {
             Log.d("d", "${i++}")
+            keyValueStorage.authToken = token.value
         }
     }
 
