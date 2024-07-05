@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -51,4 +53,6 @@ dependencies {
 
     implementation(libs.androidx.core.splashscreen)
 
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
 }
