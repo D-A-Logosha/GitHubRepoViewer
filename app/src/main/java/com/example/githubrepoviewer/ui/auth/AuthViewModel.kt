@@ -5,7 +5,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.githubrepoviewer.R
 import com.example.githubrepoviewer.data.KeyValueStorage
+import com.example.githubrepoviewer.ui.providers.ResourcesProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -20,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val keyValueStorage: KeyValueStorage
+    private val keyValueStorage: KeyValueStorage,
+    private val resources: ResourcesProvider,
 ) : ViewModel() {
 
     val token: MutableLiveData<String> = MutableLiveData("")
@@ -83,14 +86,14 @@ class AuthViewModel @Inject constructor(
             _state.value = when (validateToken(token)) {
                 ValidationResult.VALID -> State.TokenInput(isTooShort = false)
 
-                ValidationResult.INVALID_FORMAT -> State.InvalidInput("Invalid format")
+                ValidationResult.INVALID_FORMAT -> State.InvalidInput(resources.getString(R.string.invalid_format))
 
                 ValidationResult.EMPTY -> State.Idle
 
                 ValidationResult.TOO_SHORT -> if (hasFocus) State.TokenInput(isTooShort = true)
-                else State.InvalidInput("Too short")
+                else State.InvalidInput(resources.getString(R.string.too_short))
 
-                ValidationResult.TOO_LONG -> State.InvalidInput("Too long")
+                ValidationResult.TOO_LONG -> State.InvalidInput(resources.getString(R.string.too_long))
             }
             delay(VALIDATION_DELAY_MILLIS)
         }

@@ -3,4 +3,7 @@
     <string name="personal_access_token">Personal access token</string>
     <string name="invalid_token">Invalid token%1$s</string>
     <string name="sign_in">SIGN IN</string>
+    <string name="invalid_format">Invalid format</string>
+    <string name="too_long">Too long</string>
+    <string name="too_short">Too short</string>
 </resources>
