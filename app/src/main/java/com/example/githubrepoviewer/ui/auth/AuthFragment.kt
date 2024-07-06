@@ -48,9 +48,8 @@ class AuthFragment : Fragment() {
             etTokenInput.clearFocus()
         }
         viewModel.token.observe(viewLifecycleOwner) {
-            if (viewModel.token.value != binding.etTokenInput.text.toString()) binding.etTokenInput.setText(
-                viewModel.token.value
-            )
+            if (viewModel.token.value != binding.etTokenInput.text.toString())
+                binding.etTokenInput.setText(viewModel.token.value)
         }
 
         viewModel.state.observe(viewLifecycleOwner) {
@@ -73,7 +72,7 @@ class AuthFragment : Fragment() {
         binding.etTokenInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val token = s.toString()
-                viewModel.onTokenChanged(token)
+                viewModel.onTokenChanged(token, binding.etTokenInput.hasFocus())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
