@@ -54,10 +54,10 @@ class AuthFragment : Fragment() {
 
         viewModel.state.observe(viewLifecycleOwner) {
             when (viewModel.state.value) {
-                AuthViewModel.State.Idle -> idleState()
+                is AuthViewModel.State.Idle -> idleState()
                 is AuthViewModel.State.TokenInput -> inputState((viewModel.state.value as AuthViewModel.State.TokenInput).isTooShort)
                 is AuthViewModel.State.InvalidInput -> invalidInputState((viewModel.state.value as AuthViewModel.State.InvalidInput).reason)
-                AuthViewModel.State.Loading -> loadingState()
+                is AuthViewModel.State.Loading -> loadingState()
                 null -> {}
             }
         }
@@ -95,6 +95,7 @@ class AuthFragment : Fragment() {
         binding.etTokenInput.backgroundTintList =
             ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.grey))
         binding.tvTokenError.visibility = View.INVISIBLE
+        hideProgressSignIn()
     }
 
     private fun inputState(isTooShort: Boolean) {
@@ -111,10 +112,11 @@ class AuthFragment : Fragment() {
                 ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.grey))
         }
         binding.tvTokenError.visibility = View.INVISIBLE
+        hideProgressSignIn()
     }
 
     private fun loadingState() {
-        TODO()
+        showProgressSignIn()
     }
 
     private fun invalidInputState(reason: String) {
@@ -128,6 +130,7 @@ class AuthFragment : Fragment() {
             getString(
                 R.string.invalid_token,
                 reason.takeIf { it.isNotBlank() }?.let { ": $it" } ?: "")
+        hideProgressSignIn()
     }
 
     private fun EditText.showKeyboard() {
@@ -137,4 +140,14 @@ class AuthFragment : Fragment() {
     private fun EditText.hideKeyboard() {
         inputMethodManager.hideSoftInputFromWindow(this.windowToken, 0)
     }
+
+    private fun showProgressSignIn(){
+        binding.btnSignIn.setTextColor(binding.btnSignIn.currentTextColor and 0x00FFFFFF)
+        binding.progressSignIn.visibility = View.VISIBLE
+    }
+    private fun hideProgressSignIn(){
+        binding.btnSignIn.setTextColor(binding.btnSignIn.currentTextColor or (0xFF shl 24))
+        binding.progressSignIn.visibility = View.INVISIBLE
+    }
+
 }
