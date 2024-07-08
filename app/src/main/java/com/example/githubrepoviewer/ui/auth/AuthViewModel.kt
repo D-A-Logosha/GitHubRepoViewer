@@ -66,6 +66,12 @@ class AuthViewModel @Inject constructor(
                             val errorMessage = e.getErrorMessage()
                             Log.d("eh", "${e.message}: $errorMessage")
                             _state.postValue(State.InvalidInput("$errorMessage"))
+                            _actions.emit(
+                                Action.ShowError(
+                                    "$errorMessage / ${e.message} \n" +
+                                            resources.getString(R.string.information_for_developers)
+                                )
+                            )
                         } else {
                             Log.d("eh", "${e.message}")
                             _state.postValue(previousState)

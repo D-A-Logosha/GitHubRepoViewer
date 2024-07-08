@@ -13,9 +13,11 @@ import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.githubrepoviewer.R
 import com.example.githubrepoviewer.databinding.FragmentAuthBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AuthFragment : Fragment() {
@@ -61,6 +63,25 @@ class AuthFragment : Fragment() {
                 null -> {}
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.actions.collect { action ->
+                when (action) {
+                    is AuthViewModel.Action.ShowError -> {
+                        val dialog =
+                            AlertDialogFragment.newInstance(
+                                getString(R.string.error),
+                                action.message
+                            )
+                        dialog.show(childFragmentManager, "auth_alert_dialog")
+                    }
+
+                    is AuthViewModel.Action.RouteToMain -> {
+                    }
+                }
+            }
+        }
+
 
         binding.etTokenInput.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             val token = binding.etTokenInput.text.toString()
@@ -141,11 +162,12 @@ class AuthFragment : Fragment() {
         inputMethodManager.hideSoftInputFromWindow(this.windowToken, 0)
     }
 
-    private fun showProgressSignIn(){
+    private fun showProgressSignIn() {
         binding.btnSignIn.setTextColor(binding.btnSignIn.currentTextColor and 0x00FFFFFF)
         binding.progressSignIn.visibility = View.VISIBLE
     }
-    private fun hideProgressSignIn(){
+
+    private fun hideProgressSignIn() {
         binding.btnSignIn.setTextColor(binding.btnSignIn.currentTextColor or (0xFF shl 24))
         binding.progressSignIn.visibility = View.INVISIBLE
     }

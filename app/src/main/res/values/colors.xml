@@ -11,4 +11,6 @@
     <color name="grey">#FF21262D</color>
     <color name="white_hint">#80FFFFFF</color>
 
+    <color name="semi_transparent_white">#33FFFFFF</color>
+
 </resources>

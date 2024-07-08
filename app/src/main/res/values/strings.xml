@@ -6,4 +6,6 @@
     <string name="invalid_format">Invalid format</string>
     <string name="too_long">Too long</string>
     <string name="too_short">Too short</string>
+    <string name="error">Error</string>
+    <string name="information_for_developers">information for developers</string>
 </resources>
