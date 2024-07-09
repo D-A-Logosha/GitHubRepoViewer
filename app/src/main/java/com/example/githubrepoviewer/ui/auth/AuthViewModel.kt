@@ -42,12 +42,18 @@ class AuthViewModel @Inject constructor(
 
     private val tokenPattern = Regex("^[A-Za-z0-9_]{0,255}$")
     private var tokenChangeJob: Job? = null
+    private var signInJob: Job? = null
 
-    init {
-        token.value = keyValueStorage.authToken
+    fun init() {
+        token.value = keyValueStorage.authToken ?: ""
     }
 
-    private var signInJob: Job? = null
+    fun logout() {
+        token.value = ""
+        keyValueStorage.authToken = null
+        authInterceptor.setAuthToken(null)
+    }
+
     fun onSignButtonPressed() {
         if (signInJob != null) return
         val previousState = _state.value
@@ -55,10 +61,11 @@ class AuthViewModel @Inject constructor(
         val token = token.value ?: ""
         signInJob = viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                performSignIn(token)
+                authInterceptor.setAuthToken("Bearer $token")
+                appRepository.signIn()
             }.onSuccess {
                 keyValueStorage.authToken = token
-                _state.postValue(previousState)
+                _actions.emit(Action.RouteToMain)
             }.onFailure { e ->
                 when (e) {
                     is HttpException -> {
@@ -68,41 +75,21 @@ class AuthViewModel @Inject constructor(
                             _state.postValue(State.InvalidInput("$errorMessage"))
                             _actions.emit(
                                 Action.ShowError(
-                                    "$errorMessage / ${e.message} \n" +
-                                            resources.getString(R.string.information_for_developers)
+                                    "$errorMessage / ${e.message} \n" + resources.getString(R.string.information_for_developers)
                                 )
                             )
                         } else {
-                            Log.d("eh", "${e.message}")
                             _state.postValue(previousState)
                         }
                     }
 
                     else -> {
-                        Log.d("e", "${e.message}")
                         _state.postValue(previousState)
                     }
                 }
             }
             signInJob = null
         }
-    }
-
-    private suspend fun performSignIn(token: String) {
-        authInterceptor.setAuthToken("Bearer $token")
-        val userInfo = appRepository.signIn()
-        keyValueStorage.authToken = token
-        val listRepo = appRepository.getRepositories()
-        val repoDetails =
-            appRepository.getRepository(listRepo.first().owner.login, listRepo.first().name)
-        val repoReadme = appRepository.getRepositoryReadme(
-            listRepo.first().owner.login,
-            listRepo.first().name
-        )
-        Log.d("d", "$userInfo")
-        Log.d("d", "$listRepo")
-        Log.d("d", "$repoDetails")
-        Log.d("d", repoReadme)
     }
 
     sealed interface State {

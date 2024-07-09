@@ -129,7 +129,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:padding="8dp"
-        android:indeterminateTint="@android:color/white"
         android:visibility="invisible"
         app:layout_constraintTop_toTopOf="@id/btn_sign_in"
         app:layout_constraintStart_toStartOf="@id/btn_sign_in"

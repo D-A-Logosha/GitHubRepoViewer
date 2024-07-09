@@ -14,16 +14,17 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.githubrepoviewer.R
 import com.example.githubrepoviewer.databinding.FragmentAuthBinding
+import com.example.githubrepoviewer.ui.lifecycleLazy
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AuthFragment : Fragment() {
 
-    private var _binding: FragmentAuthBinding? = null
-    private val binding get() = _binding!!
+    private var binding: FragmentAuthBinding by lifecycleLazy()
 
     private val viewModel: AuthViewModel by viewModels()
 
@@ -34,12 +35,24 @@ class AuthFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentAuthBinding.inflate(inflater, container, false)
+        binding = FragmentAuthBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val isLogout = arguments?.getBoolean("isLogout") ?: false
+        if (isLogout) {
+            viewModel.logout()
+        }
+        else {
+            viewModel.init()
+        }
+        setupUI()
+        observeViewModel()
+    }
+
+    private fun setupUI() {
         binding.apply {
             root.setFocusableInTouchMode(true)
             root.setOnClickListener {
@@ -49,6 +62,31 @@ class AuthFragment : Fragment() {
             btnSignIn.nextFocusForwardId = etTokenInput.id
             etTokenInput.clearFocus()
         }
+
+        binding.etTokenInput.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
+            val token = binding.etTokenInput.text.toString()
+            viewModel.onTokenChanged(token, hasFocus)
+            if (hasFocus) binding.etTokenInput.showKeyboard()
+            else binding.etTokenInput.hideKeyboard()
+        }
+
+        binding.etTokenInput.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val token = s.toString()
+                viewModel.onTokenChanged(token, binding.etTokenInput.hasFocus())
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        binding.btnSignIn.setOnClickListener {
+            if (binding.etTokenInput.hasFocus()) binding.etTokenInput.clearFocus()
+            viewModel.onSignButtonPressed()
+        }
+    }
+
+    private fun observeViewModel() {
         viewModel.token.observe(viewLifecycleOwner) {
             if (viewModel.token.value != binding.etTokenInput.text.toString())
                 binding.etTokenInput.setText(viewModel.token.value)
@@ -77,38 +115,11 @@ class AuthFragment : Fragment() {
                     }
 
                     is AuthViewModel.Action.RouteToMain -> {
+                        findNavController().navigate(R.id.action_authFragment_to_repositoriesListFragment)
                     }
                 }
             }
         }
-
-
-        binding.etTokenInput.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
-            val token = binding.etTokenInput.text.toString()
-            viewModel.onTokenChanged(token, hasFocus)
-            if (hasFocus) binding.etTokenInput.showKeyboard()
-            else binding.etTokenInput.hideKeyboard()
-        }
-
-        binding.etTokenInput.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                val token = s.toString()
-                viewModel.onTokenChanged(token, binding.etTokenInput.hasFocus())
-            }
-
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        })
-
-        binding.btnSignIn.setOnClickListener {
-            if (binding.etTokenInput.hasFocus()) binding.etTokenInput.clearFocus()
-            viewModel.onSignButtonPressed()
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun idleState() {

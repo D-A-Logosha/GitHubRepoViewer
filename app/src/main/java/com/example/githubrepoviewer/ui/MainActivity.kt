@@ -12,8 +12,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private var _binding: ActivityMainBinding? = null
-    private val binding get() = _binding!!
+    private var binding: ActivityMainBinding by lifecycleLazy()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         var keepSplashScreenOn = true
@@ -25,13 +24,8 @@ class MainActivity : AppCompatActivity() {
             keepSplashScreenOn
         }
         super.onCreate(savedInstanceState)
-        _binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 
     private companion object {
