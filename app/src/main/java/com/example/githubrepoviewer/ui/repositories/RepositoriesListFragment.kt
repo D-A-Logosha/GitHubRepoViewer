@@ -9,7 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.githubrepoviewer.R
+import com.example.githubrepoviewer.data.model.Repo
 import com.example.githubrepoviewer.databinding.FragmentContainerBinding
+import com.example.githubrepoviewer.databinding.FragmentRepositoriesListBinding
 import com.example.githubrepoviewer.databinding.LayoutLoadingBinding
 import com.example.githubrepoviewer.ui.lifecycleLazy
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,8 +24,19 @@ class RepositoriesListFragment : Fragment() {
     private val loadingBinding by lifecycleLazy {
         LayoutLoadingBinding.inflate(layoutInflater, binding.contentContainer, true)
     }
+    private val repositoriesListBinding by lifecycleLazy {
+        FragmentRepositoriesListBinding.inflate(layoutInflater, binding.contentContainer, true)
+    }
 
     private val viewModel: RepositoriesListViewModel by viewModels()
+
+    private val adapter by lazy {
+        RepositoryAdapter(object : RepositoryActionListener {
+            override fun selectRepository(checkRepo: Repo) {
+                Log.d("RepositoriesList", "$checkRepo")
+            }
+        })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -35,15 +48,25 @@ class RepositoriesListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupToolbar()
+        viewModel.loadRepositories()
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                is RepositoriesListViewModel.State.Loading -> binding.contentContainer.apply {
-                    displayedChild = indexOfChild(loadingBinding.root)
-                }
+            binding.contentContainer.apply {
+                displayedChild = when (state) {
+                    is RepositoriesListViewModel.State.Loading -> {
+                        indexOfChild(loadingBinding.root)
+                    }
 
-                RepositoriesListViewModel.State.Empty -> TODO()
-                is RepositoriesListViewModel.State.Error -> TODO()
-                is RepositoriesListViewModel.State.Loaded -> TODO()
+                    is RepositoriesListViewModel.State.Loaded -> {
+                        repositoriesListBinding.rvRepositories.adapter = adapter
+                        adapter.repos = state.repos
+                        indexOfChild(repositoriesListBinding.root)
+                    }
+
+                    is RepositoriesListViewModel.State.Error -> TODO()
+                    RepositoriesListViewModel.State.Empty -> TODO()
+
+
+                }
             }
         }
     }

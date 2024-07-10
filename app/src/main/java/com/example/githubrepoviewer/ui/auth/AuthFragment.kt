@@ -44,8 +44,7 @@ class AuthFragment : Fragment() {
         val isLogout = arguments?.getBoolean("isLogout") ?: false
         if (isLogout) {
             viewModel.logout()
-        }
-        else {
+        } else {
             viewModel.init()
         }
         setupUI()
@@ -87,16 +86,16 @@ class AuthFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.token.observe(viewLifecycleOwner) {
-            if (viewModel.token.value != binding.etTokenInput.text.toString())
-                binding.etTokenInput.setText(viewModel.token.value)
+        viewModel.token.observe(viewLifecycleOwner) { token ->
+            if (token != binding.etTokenInput.text.toString())
+                binding.etTokenInput.setText(token)
         }
 
-        viewModel.state.observe(viewLifecycleOwner) {
-            when (viewModel.state.value) {
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            when (state) {
                 is AuthViewModel.State.Idle -> idleState()
-                is AuthViewModel.State.TokenInput -> inputState((viewModel.state.value as AuthViewModel.State.TokenInput).isTooShort)
-                is AuthViewModel.State.InvalidInput -> invalidInputState((viewModel.state.value as AuthViewModel.State.InvalidInput).reason)
+                is AuthViewModel.State.TokenInput -> inputState(state.isTooShort)
+                is AuthViewModel.State.InvalidInput -> invalidInputState(state.reason)
                 is AuthViewModel.State.Loading -> loadingState()
                 null -> {}
             }

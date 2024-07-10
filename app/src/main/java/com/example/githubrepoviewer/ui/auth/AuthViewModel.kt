@@ -34,7 +34,7 @@ class AuthViewModel @Inject constructor(
 
     val token: MutableLiveData<String> = MutableLiveData("")
 
-    private val _state: MutableLiveData<State> by lazy { MutableLiveData<State>(State.Idle) }
+    private val _state = MutableLiveData<State>(State.Idle)
     val state: LiveData<State> = _state
 
     private var _actions = MutableSharedFlow<Action>()
