@@ -71,7 +71,7 @@ class AuthViewModel @Inject constructor(
                     is HttpException -> {
                         if (e.code() == 401) {
                             val errorMessage = e.getErrorMessage()
-                            Log.d("eh", "${e.message}: $errorMessage")
+                            Log.d("AuthViewModel", "${e.message}: $errorMessage")
                             _state.postValue(State.InvalidInput("$errorMessage"))
                             _actions.emit(
                                 Action.ShowError(
@@ -79,11 +79,24 @@ class AuthViewModel @Inject constructor(
                                 )
                             )
                         } else {
+                            val errorMessage = e.getErrorMessage()
+                            Log.d("AuthViewModel", "${e.message}: $errorMessage")
+                            _actions.emit(
+                                Action.ShowError(
+                                    "$errorMessage / ${e.message} \n" + resources.getString(R.string.information_for_developers)
+                                )
+                            )
                             _state.postValue(previousState)
                         }
                     }
 
                     else -> {
+                        Log.d("AuthViewModel", "${e.message}")
+                        _actions.emit(
+                            Action.ShowError(
+                                "${e.message} \n" + resources.getString(R.string.information_for_developers)
+                            )
+                        )
                         _state.postValue(previousState)
                     }
                 }

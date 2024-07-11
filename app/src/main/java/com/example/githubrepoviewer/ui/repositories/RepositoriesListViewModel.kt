@@ -19,6 +19,7 @@ class RepositoriesListViewModel @Inject constructor(
     private val resources: ResourcesProvider,
     private val appRepository: AppRepository,
 ) : ViewModel() {
+
     private val _state = MutableLiveData<State>(State.Loading)
     val state: LiveData<State> = _state
 

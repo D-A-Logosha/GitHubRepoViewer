@@ -20,6 +20,7 @@
     <style name="Theme.GitHubRepoViewer.ButtonStyle" parent="Widget.Material3.Button">
         <item name="cornerRadius">8dp</item>
         <item name="backgroundTint">@color/accent</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="AlertDialogTheme" parent="ThemeOverlay.Material3.Dialog.Alert">
@@ -64,6 +65,32 @@
 
     <style name="RepositoryItem.Divider">
         <item name="android:background">@color/grey</item>
+    </style>
+
+    <style name="Layout">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Layout.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/secondary</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Layout.Message">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Layout.Error">
+    </style>
+
+    <style name="Layout.Error.Title" parent="Layout.Title">
+        <item name="android:textColor">@color/error_title</item>
+    </style>
+
+    <style name="Layout.Error.Message" parent="Layout.Message">
     </style>
 
 </resources>

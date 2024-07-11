@@ -12,7 +12,10 @@ import com.example.githubrepoviewer.R
 import com.example.githubrepoviewer.data.model.Repo
 import com.example.githubrepoviewer.databinding.FragmentContainerBinding
 import com.example.githubrepoviewer.databinding.FragmentRepositoriesListBinding
+import com.example.githubrepoviewer.databinding.LayoutConnectionErrorBinding
+import com.example.githubrepoviewer.databinding.LayoutEmptyBinding
 import com.example.githubrepoviewer.databinding.LayoutLoadingBinding
+import com.example.githubrepoviewer.databinding.LayoutSomethingErrorBinding
 import com.example.githubrepoviewer.ui.lifecycleLazy
 import com.example.githubrepoviewer.ui.providers.ResourcesProvider
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,6 +34,15 @@ class RepositoriesListFragment : Fragment() {
     }
     private val repositoriesListBinding by lifecycleLazy {
         FragmentRepositoriesListBinding.inflate(layoutInflater, binding.contentContainer, true)
+    }
+    private val connectionErrorBinding by lifecycleLazy {
+        LayoutConnectionErrorBinding.inflate(layoutInflater, binding.contentContainer, true)
+    }
+    private val somethingErrorBinding by lifecycleLazy {
+        LayoutSomethingErrorBinding.inflate(layoutInflater, binding.contentContainer, true)
+    }
+    private val emptyBinding by lifecycleLazy {
+        LayoutEmptyBinding.inflate(layoutInflater, binding.contentContainer, true)
     }
 
     private val viewModel: RepositoriesListViewModel by viewModels()
@@ -67,10 +79,21 @@ class RepositoriesListFragment : Fragment() {
                         indexOfChild(repositoriesListBinding.root)
                     }
 
-                    is RepositoriesListViewModel.State.Error -> TODO()
-                    RepositoriesListViewModel.State.Empty -> TODO()
+                    is RepositoriesListViewModel.State.Error -> {
+                        if (state.error == "UnknownHostException") {
+                            connectionErrorBinding.button.setOnClickListener { viewModel.loadRepositories() }
+                            indexOfChild(connectionErrorBinding.root)
+                        } else {
+                            somethingErrorBinding.button.setOnClickListener { viewModel.loadRepositories() }
+                            somethingErrorBinding.tvMessage.text = state.error
+                            indexOfChild(somethingErrorBinding.root)
+                        }
+                    }
 
-
+                    RepositoriesListViewModel.State.Empty -> {
+                        emptyBinding.button.setOnClickListener { viewModel.loadRepositories() }
+                        indexOfChild(emptyBinding.root)
+                    }
                 }
             }
         }
@@ -89,8 +112,7 @@ class RepositoriesListFragment : Fragment() {
                 }
 
                 else -> {
-                    Log.d("Toolbar", "Unknown menu item clicked")
-                    false
+                    throw IllegalStateException("Toolbar: Unknown menu item clicked")
                 }
             }
         }
