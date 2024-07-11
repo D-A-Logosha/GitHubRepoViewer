@@ -16,10 +16,9 @@ interface GitHubApi {
         @Query("per_page") perPage: Int = 10,
     ): List<Repo>
 
-    @GET("repos/{owner}/{repo}")
+    @GET("repositories/{repoId}")
     suspend fun getRepositoryDetails(
-        @Path("owner") owner: String,
-        @Path("repo") repoName: String,
+        @Path("repoId") repoId: String
     ): RepoDetails
 
     @GET("repos/{owner}/{repo}/readme")

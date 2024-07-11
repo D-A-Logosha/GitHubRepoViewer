@@ -5,6 +5,7 @@
         <item name="android:statusBarColor">@color/status_bar</item>
         <item name="android:navigationBarColor">@color/status_bar</item>
         <item name="android:indeterminateTint">@color/white</item>
+        <item name="colorControlNormal">@color/white</item>
     </style>
 
     <style name="Theme.GitHubRepoViewer" parent="Base.Theme.GitHubRepoViewer" />

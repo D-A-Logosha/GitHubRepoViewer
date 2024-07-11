@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import com.example.githubrepoviewer.R
 import com.example.githubrepoviewer.data.model.Repo
 import com.example.githubrepoviewer.databinding.FragmentContainerBinding
@@ -51,6 +53,13 @@ class RepositoriesListFragment : Fragment() {
         RepositoryAdapter(object : RepositoryActionListener {
             override fun selectRepository(checkRepo: Repo) {
                 Log.d("RepositoriesList", "$checkRepo")
+                val bundle = Bundle().apply {
+                    putString("repoId", checkRepo.id.toString())
+                    putString("repoName", checkRepo.name)
+                }
+                findNavController().navigate(
+                    R.id.action_repositoriesListFragment_to_detailInfoFragment, bundle
+                )
             }
         }, resourcesProvider)
     }
@@ -100,10 +109,17 @@ class RepositoriesListFragment : Fragment() {
     }
 
     private fun setupToolbar() {
+        if (binding.appBar.toolbar.menu.size() == 0) {
+            binding.appBar.toolbar.inflateMenu(R.menu.menu_appbar)
+        }
+        if (parentFragmentManager.backStackEntryCount == 0) {
+            binding.appBar.toolbar.navigationIcon = null
+        } else {
+            val navController = findNavController()
+            val appBarConfiguration = AppBarConfiguration(setOf(binding.appBar.toolbar.id))
+            binding.appBar.toolbar.setupWithNavController(navController, appBarConfiguration)
+        }
         binding.appBar.toolbar.title = getString(R.string.repositories)
-
-        binding.appBar.toolbar.inflateMenu(R.menu.menu_appbar)
-
         binding.appBar.toolbar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.action_logout -> {

@@ -15,8 +15,8 @@ class AppRepository @Inject constructor(
         return gitHubApi.getUserRepositories()
     }
 
-    suspend fun getRepository(ownerName: String, repositoryName: String): RepoDetails {
-        return gitHubApi.getRepositoryDetails(ownerName, repositoryName)
+    suspend fun getRepository(repoId: String): RepoDetails {
+        return gitHubApi.getRepositoryDetails(repoId)
     }
 
     @OptIn(ExperimentalEncodingApi::class)
