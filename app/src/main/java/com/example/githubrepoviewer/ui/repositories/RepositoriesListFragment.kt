@@ -14,10 +14,15 @@ import com.example.githubrepoviewer.databinding.FragmentContainerBinding
 import com.example.githubrepoviewer.databinding.FragmentRepositoriesListBinding
 import com.example.githubrepoviewer.databinding.LayoutLoadingBinding
 import com.example.githubrepoviewer.ui.lifecycleLazy
+import com.example.githubrepoviewer.ui.providers.ResourcesProvider
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class RepositoriesListFragment : Fragment() {
+
+    @Inject
+    lateinit var resourcesProvider: ResourcesProvider
 
     private var binding: FragmentContainerBinding by lifecycleLazy()
 
@@ -35,7 +40,7 @@ class RepositoriesListFragment : Fragment() {
             override fun selectRepository(checkRepo: Repo) {
                 Log.d("RepositoriesList", "$checkRepo")
             }
-        })
+        }, resourcesProvider)
     }
 
     override fun onCreateView(

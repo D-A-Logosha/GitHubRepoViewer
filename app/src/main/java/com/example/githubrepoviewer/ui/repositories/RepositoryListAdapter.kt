@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubrepoviewer.data.model.Repo
 import com.example.githubrepoviewer.databinding.RepositoryItemBinding
+import com.example.githubrepoviewer.ui.providers.ResourcesProvider
 
 
 interface RepositoryActionListener {
@@ -16,6 +17,7 @@ interface RepositoryActionListener {
 
 class RepositoryAdapter(
     private val actionListener: RepositoryActionListener,
+    private val resourcesProvider: ResourcesProvider,
 ) :
     RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>(), View.OnClickListener {
 
@@ -49,6 +51,7 @@ class RepositoryAdapter(
             tvRepoName.text = repo.name
             tvRepoDescription.text = repo.description
             tvRepoLanguage.text = repo.language
+            tvRepoLanguage.setTextColor(resourcesProvider.getGithubColorForLanguage(repo.language))
         }
     }
 
