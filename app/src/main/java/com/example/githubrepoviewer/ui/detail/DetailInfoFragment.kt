@@ -1,5 +1,6 @@
 package com.example.githubrepoviewer.ui.detail
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,8 +12,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.example.githubrepoviewer.R
-import com.example.githubrepoviewer.data.model.Repo
 import com.example.githubrepoviewer.databinding.FragmentContainerBinding
+import com.example.githubrepoviewer.databinding.FragmentDetailInfoBinding
 import com.example.githubrepoviewer.databinding.LayoutLoadingBinding
 import com.example.githubrepoviewer.ui.lifecycleLazy
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +25,9 @@ class DetailInfoFragment : Fragment() {
 
     private val loadingBinding by lifecycleLazy {
         LayoutLoadingBinding.inflate(layoutInflater, binding.contentContainer, true)
+    }
+    private val detailInfoBinding by lifecycleLazy {
+        FragmentDetailInfoBinding.inflate(layoutInflater, binding.contentContainer, true)
     }
 
     private val viewModel: RepositoryInfoViewModel by viewModels()
@@ -39,8 +43,8 @@ class DetailInfoFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val repoId = arguments?.getString("repoId")?:""
-        repoName = arguments?.getString("repoName")?:""
+        val repoId = arguments?.getString("repoId") ?: ""
+        repoName = arguments?.getString("repoName") ?: ""
         Log.d("DetailInfoFragment", repoId)
         viewModel.loadRepository(repoId)
         setupToolbar()
@@ -53,7 +57,27 @@ class DetailInfoFragment : Fragment() {
                     }
 
                     is RepositoryInfoViewModel.State.Error -> TODO()
-                    is RepositoryInfoViewModel.State.Loaded -> TODO()
+                    is RepositoryInfoViewModel.State.Loaded -> {
+                        val cleanedUrl = Uri.parse(state.githubRepo.htmlUrl).run {
+                            "${host?.takeIf { it.startsWith("www.") }?.substring(4) ?: host}${path}"
+                        }
+                        detailInfoBinding.tvLink.text = cleanedUrl
+                        state.githubRepo.htmlUrl
+                        if (state.githubRepo.license?.isEmpty() != false) {
+                            detailInfoBinding.groupLicense.visibility = View.GONE
+                        } else {
+                            detailInfoBinding.tvLicense.text = state.githubRepo.license
+                            detailInfoBinding.groupLicense.visibility = View.VISIBLE
+                        }
+                        detailInfoBinding.tvStars.text = state.githubRepo.stargazersCount.toString()
+                        detailInfoBinding.tvForks.text = state.githubRepo.forksCount.toString()
+                        detailInfoBinding.tvWatchers.text =
+                            state.githubRepo.watchersCount.toString()
+                        detailInfoBinding.readmeContainer.apply {
+                            displayedChild = indexOfChild(detailInfoBinding.pbReadme)
+                        }
+                        indexOfChild(detailInfoBinding.root)
+                    }
                 }
             }
         }

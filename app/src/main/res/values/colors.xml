@@ -14,4 +14,10 @@
 
     <color name="semi_transparent_white">#33FFFFFF</color>
 
+    <color name="stars">#FFFAD876</color>
+    <color name="forks">#FF6ED370</color>
+    <color name="watchers">#FF9CFFF9</color>
+    <color name="readme">#B2FFFFFF</color>
+
+
 </resources>

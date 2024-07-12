@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.GitHubRepoViewer" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="android:windowBackground">@color/background</item>
@@ -42,8 +42,7 @@
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="RepositoryItem">
-    </style>
+    <style name="RepositoryItem"></style>
 
     <style name="RepositoryItem.Name">
         <item name="android:textSize">16sp</item>
@@ -84,14 +83,48 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="Layout.Error">
-    </style>
+    <style name="Layout.Error"></style>
 
     <style name="Layout.Error.Title" parent="Layout.Title">
         <item name="android:textColor">@color/error_title</item>
     </style>
 
-    <style name="Layout.Error.Message" parent="Layout.Message">
+    <style name="Layout.Error.Message" parent="Layout.Message"></style>
+
+    <style name="DetailInfo">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="DetailInfo.Link">
+        <item name="android:textColor">@color/secondary</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+
+    </style>
+
+    <style name="DetailInfo.License">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="DetailInfo.Stars">
+        <item name="android:textColor">@color/stars</item>
+    </style>
+
+    <style name="DetailInfo.Forks">
+        <item name="android:textColor">@color/forks</item>
+    </style>
+
+    <style name="DetailInfo.Watchers">
+        <item name="android:textColor">@color/watchers</item>
+    </style>
+
+    <style name="DetailInfo.Readme">
+        <item name="android:textColor">@color/readme</item>
     </style>
 
 </resources>

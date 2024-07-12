@@ -31,12 +31,22 @@ class RepositoryInfoViewModel @Inject constructor(
         _state.value = State.Loading
         loadRepositoryJob = viewModelScope.launch(Dispatchers.IO) {
             runCatching {
-                val repoDetails = appRepository.getRepository(repoId)
-                Log.d("RepositoryInfoViewModel", "$repoDetails")
+                appRepository.getRepository(repoId)
+            }.onSuccess {
+                _state.postValue(State.Loaded(it, ReadmeState.Loading))
+                loadRepositoryReadme(it.owner.login, it.name)
             }.onFailure { e ->
                 Log.d("RepositoryInfoViewModel", "${e.message}")
             }
             loadRepositoryJob = null
+        }
+    }
+
+    fun loadRepositoryReadme(ownerName: String, repositoryName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val repoReadme =
+                appRepository.getRepositoryReadme(ownerName, repositoryName)
+            Log.d("RepositoryInfoViewModel", repoReadme)
         }
     }
 
