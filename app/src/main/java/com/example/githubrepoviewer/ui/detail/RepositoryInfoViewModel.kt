@@ -8,11 +8,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.githubrepoviewer.data.AppRepository
 import com.example.githubrepoviewer.data.model.RepoDetails
 import com.example.githubrepoviewer.ui.providers.ResourcesProvider
-import com.example.githubrepoviewer.ui.repositories.RepositoriesListViewModel.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,7 +36,14 @@ class RepositoryInfoViewModel @Inject constructor(
                 _state.postValue(State.Loaded(it, ReadmeState.Loading))
                 loadRepositoryReadme(it.owner.login, it.name)
             }.onFailure { e ->
-                Log.d("RepositoryInfoViewModel", "${e.message}")
+                val newState = when (e) {
+                    is UnknownHostException -> {
+                        State.Error("UnknownHostException")
+                    }
+
+                    else -> State.Error("${e.message}")
+                }
+                _state.postValue(newState)
             }
             loadRepositoryJob = null
         }

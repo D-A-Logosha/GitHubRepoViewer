@@ -14,7 +14,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.githubrepoviewer.R
 import com.example.githubrepoviewer.databinding.FragmentContainerBinding
 import com.example.githubrepoviewer.databinding.FragmentDetailInfoBinding
+import com.example.githubrepoviewer.databinding.LayoutConnectionErrorBinding
 import com.example.githubrepoviewer.databinding.LayoutLoadingBinding
+import com.example.githubrepoviewer.databinding.LayoutSomethingErrorBinding
 import com.example.githubrepoviewer.ui.lifecycleLazy
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,6 +30,12 @@ class DetailInfoFragment : Fragment() {
     }
     private val detailInfoBinding by lifecycleLazy {
         FragmentDetailInfoBinding.inflate(layoutInflater, binding.contentContainer, true)
+    }
+    private val connectionErrorBinding by lifecycleLazy {
+        LayoutConnectionErrorBinding.inflate(layoutInflater, binding.contentContainer, true)
+    }
+    private val somethingErrorBinding by lifecycleLazy {
+        LayoutSomethingErrorBinding.inflate(layoutInflater, binding.contentContainer, true)
     }
 
     private val viewModel: RepositoryInfoViewModel by viewModels()
@@ -56,7 +64,16 @@ class DetailInfoFragment : Fragment() {
                         indexOfChild(loadingBinding.root)
                     }
 
-                    is RepositoryInfoViewModel.State.Error -> TODO()
+                    is RepositoryInfoViewModel.State.Error -> {
+                        if (state.error == "UnknownHostException") {
+                            connectionErrorBinding.button.setOnClickListener { viewModel.loadRepository(repoId) }
+                            indexOfChild(connectionErrorBinding.root)
+                        } else {
+                            somethingErrorBinding.button.setOnClickListener { viewModel.loadRepository(repoId) }
+                            somethingErrorBinding.tvMessage.text = state.error
+                            indexOfChild(somethingErrorBinding.root)
+                        }
+                    }
                     is RepositoryInfoViewModel.State.Loaded -> {
                         val cleanedUrl = Uri.parse(state.githubRepo.htmlUrl).run {
                             "${host?.takeIf { it.startsWith("www.") }?.substring(4) ?: host}${path}"
