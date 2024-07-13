@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
+import androidx.viewbinding.ViewBinding
 import com.example.githubrepoviewer.R
 import com.example.githubrepoviewer.databinding.FragmentContainerBinding
 import com.example.githubrepoviewer.databinding.FragmentDetailInfoBinding
@@ -37,6 +38,9 @@ class DetailInfoFragment : Fragment() {
     private val somethingErrorBinding by lifecycleLazy {
         LayoutSomethingErrorBinding.inflate(layoutInflater, binding.contentContainer, true)
     }
+
+    private val layoutIndexesReadmeContainer =
+        mutableMapOf<Class<out ViewBinding>, Pair<ViewBinding, Int>>()
 
     private val viewModel: RepositoryInfoViewModel by viewModels()
 
@@ -66,14 +70,23 @@ class DetailInfoFragment : Fragment() {
 
                     is RepositoryInfoViewModel.State.Error -> {
                         if (state.error == "UnknownHostException") {
-                            connectionErrorBinding.button.setOnClickListener { viewModel.loadRepository(repoId) }
+                            connectionErrorBinding.button.setOnClickListener {
+                                viewModel.loadRepository(
+                                    repoId
+                                )
+                            }
                             indexOfChild(connectionErrorBinding.root)
                         } else {
-                            somethingErrorBinding.button.setOnClickListener { viewModel.loadRepository(repoId) }
+                            somethingErrorBinding.button.setOnClickListener {
+                                viewModel.loadRepository(
+                                    repoId
+                                )
+                            }
                             somethingErrorBinding.tvMessage.text = state.error
                             indexOfChild(somethingErrorBinding.root)
                         }
                     }
+
                     is RepositoryInfoViewModel.State.Loaded -> {
                         val cleanedUrl = Uri.parse(state.githubRepo.htmlUrl).run {
                             "${host?.takeIf { it.startsWith("www.") }?.substring(4) ?: host}${path}"
@@ -90,14 +103,69 @@ class DetailInfoFragment : Fragment() {
                         detailInfoBinding.tvForks.text = state.githubRepo.forksCount.toString()
                         detailInfoBinding.tvWatchers.text =
                             state.githubRepo.watchersCount.toString()
-                        detailInfoBinding.readmeContainer.apply {
-                            displayedChild = indexOfChild(detailInfoBinding.pbReadme)
-                        }
+                        stateReadme(state.readmeState)
                         indexOfChild(detailInfoBinding.root)
                     }
                 }
             }
         }
+    }
+
+    override fun onDestroyView() {
+        viewModel.cancelJob()
+        super.onDestroyView()
+    }
+
+    private fun stateReadme(readmeState: RepositoryInfoViewModel.ReadmeState) {
+        detailInfoBinding.readmeContainer.apply {
+            displayedChild = when (readmeState) {
+                RepositoryInfoViewModel.ReadmeState.Loading -> indexOfChild(detailInfoBinding.pbReadme)
+                RepositoryInfoViewModel.ReadmeState.Empty -> indexOfChild(detailInfoBinding.tvReadme)
+                is RepositoryInfoViewModel.ReadmeState.Error -> {
+                    val bindingClass = if (readmeState.error == "UnknownHostException")
+                        LayoutConnectionErrorBinding::class.java
+                    else LayoutSomethingErrorBinding::class.java
+                    val (inflatedBinding, childIndex) = layoutIndexesReadmeContainer[bindingClass]
+                        ?: run {
+                            val inflatedBinding = when (bindingClass) {
+                                LayoutConnectionErrorBinding::class.java ->
+                                    LayoutConnectionErrorBinding.inflate(
+                                        layoutInflater, this@apply, true
+                                    ).apply {
+                                        button.setOnClickListener(::onRetryLoadRepositoryReadme)
+                                    }
+
+                                LayoutSomethingErrorBinding::class.java ->
+                                    LayoutSomethingErrorBinding.inflate(
+                                        layoutInflater, this@apply, true
+                                    ).apply {
+                                        button.setOnClickListener(::onRetryLoadRepositoryReadme)
+                                    }
+
+                                else -> throw IllegalStateException("Unknown bindingClass")
+                            }
+
+                            val index =
+                                detailInfoBinding.readmeContainer.indexOfChild(inflatedBinding.root)
+                            Pair(inflatedBinding, index).apply {
+                                layoutIndexesReadmeContainer[bindingClass] = this
+                            }
+                        }
+                    (inflatedBinding as? LayoutSomethingErrorBinding)?.tvMessage?.text =
+                        readmeState.error
+                    childIndex
+                }
+
+                is RepositoryInfoViewModel.ReadmeState.Loaded -> {
+                    detailInfoBinding.tvReadme.text = readmeState.markdown
+                    indexOfChild(detailInfoBinding.tvReadme)
+                }
+            }
+        }
+    }
+
+    private fun onRetryLoadRepositoryReadme(view: View?) {
+        viewModel.loadRepositoryReadme()
     }
 
     private fun setupToolbar() {

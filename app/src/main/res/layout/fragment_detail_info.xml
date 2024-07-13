@@ -227,9 +227,5 @@
             android:paddingHorizontal="8dp"
             android:text="@string/no_readme" />
 
-        <include
-            android:id="@+id/layout_connection_error"
-            layout="@layout/layout_connection_error" />
-
     </ViewFlipper>
 </androidx.constraintlayout.widget.ConstraintLayout>
