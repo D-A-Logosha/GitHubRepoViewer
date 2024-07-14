@@ -65,4 +65,7 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter)
 
+    implementation(libs.markwon.core)
+    implementation(libs.markwon.image)
+
 }

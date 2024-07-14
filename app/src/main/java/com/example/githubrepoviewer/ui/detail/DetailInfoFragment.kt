@@ -20,6 +20,7 @@ import com.example.githubrepoviewer.databinding.LayoutLoadingBinding
 import com.example.githubrepoviewer.databinding.LayoutSomethingErrorBinding
 import com.example.githubrepoviewer.ui.lifecycleLazy
 import dagger.hilt.android.AndroidEntryPoint
+import io.noties.markwon.Markwon
 
 @AndroidEntryPoint
 class DetailInfoFragment : Fragment() {
@@ -41,6 +42,10 @@ class DetailInfoFragment : Fragment() {
 
     private val layoutIndexesReadmeContainer =
         mutableMapOf<Class<out ViewBinding>, Pair<ViewBinding, Int>>()
+
+    private val markwon by lazy {
+        Markwon.builder(requireContext()).build()
+    }
 
     private val viewModel: RepositoryInfoViewModel by viewModels()
 
@@ -122,25 +127,23 @@ class DetailInfoFragment : Fragment() {
                 RepositoryInfoViewModel.ReadmeState.Loading -> indexOfChild(detailInfoBinding.pbReadme)
                 RepositoryInfoViewModel.ReadmeState.Empty -> indexOfChild(detailInfoBinding.tvReadme)
                 is RepositoryInfoViewModel.ReadmeState.Error -> {
-                    val bindingClass = if (readmeState.error == "UnknownHostException")
-                        LayoutConnectionErrorBinding::class.java
-                    else LayoutSomethingErrorBinding::class.java
+                    val bindingClass =
+                        if (readmeState.error == "UnknownHostException") LayoutConnectionErrorBinding::class.java
+                        else LayoutSomethingErrorBinding::class.java
                     val (inflatedBinding, childIndex) = layoutIndexesReadmeContainer[bindingClass]
                         ?: run {
                             val inflatedBinding = when (bindingClass) {
-                                LayoutConnectionErrorBinding::class.java ->
-                                    LayoutConnectionErrorBinding.inflate(
-                                        layoutInflater, this@apply, true
-                                    ).apply {
-                                        button.setOnClickListener(::onRetryLoadRepositoryReadme)
-                                    }
+                                LayoutConnectionErrorBinding::class.java -> LayoutConnectionErrorBinding.inflate(
+                                    layoutInflater, this@apply, true
+                                ).apply {
+                                    button.setOnClickListener(::onRetryLoadRepositoryReadme)
+                                }
 
-                                LayoutSomethingErrorBinding::class.java ->
-                                    LayoutSomethingErrorBinding.inflate(
-                                        layoutInflater, this@apply, true
-                                    ).apply {
-                                        button.setOnClickListener(::onRetryLoadRepositoryReadme)
-                                    }
+                                LayoutSomethingErrorBinding::class.java -> LayoutSomethingErrorBinding.inflate(
+                                    layoutInflater, this@apply, true
+                                ).apply {
+                                    button.setOnClickListener(::onRetryLoadRepositoryReadme)
+                                }
 
                                 else -> throw IllegalStateException("Unknown bindingClass")
                             }
@@ -157,7 +160,10 @@ class DetailInfoFragment : Fragment() {
                 }
 
                 is RepositoryInfoViewModel.ReadmeState.Loaded -> {
-                    detailInfoBinding.tvReadme.text = readmeState.markdown
+                    Log.d("DetailInfoFragment", readmeState.markdown)
+                    markwon.setMarkdown(
+                        detailInfoBinding.tvReadme, readmeState.markdown
+                    )
                     indexOfChild(detailInfoBinding.tvReadme)
                 }
             }
