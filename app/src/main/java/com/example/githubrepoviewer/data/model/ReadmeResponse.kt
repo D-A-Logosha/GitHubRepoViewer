@@ -8,5 +8,6 @@ data class ReadmeResponse(
     @SerialName("name") val name: String,
     @SerialName("path") val path: String,
     @SerialName("content") val content: String,
-    @SerialName("encoding") val encoding: String
+    @SerialName("encoding") val encoding: String,
+    @SerialName("download_url") val downloadUrl: String,
 )

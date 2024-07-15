@@ -20,20 +20,38 @@ class AppRepository @Inject constructor(
     }
 
     @OptIn(ExperimentalEncodingApi::class)
-    suspend fun getRepositoryReadme(ownerName: String, repositoryName: String, branchName: String="Default"): String {
+    suspend fun getRepositoryReadme(
+        ownerName: String, repositoryName: String, branchName: String = "Default"
+    ): String {
         val readmeResponse = gitHubApi.getRepositoryReadme(ownerName, repositoryName)
-        return when(readmeResponse.encoding) {
+        return when (readmeResponse.encoding) {
             "base64" -> {
                 val cleanBase64String = readmeResponse.content.replace("\n", "")
                 val decodedBytes = Base64.decode(cleanBase64String)
                 String(decodedBytes, Charsets.UTF_8)
             }
+
             "" -> readmeResponse.content
             else -> "Unknown encoding"
-        }
+        }.replaceMarkdownImageUrls(readmeResponse.downloadUrl)
     }
 
     suspend fun signIn(): UserInfo {
         return gitHubApi.getUserInfo()
+    }
+
+    private fun String.replaceMarkdownImageUrls(downloadUrl: String): String {
+        val baseUrl = downloadUrl.substringBeforeLast("/")
+        val imageRegex = Regex("!\\[(.*?)]\\((.*?)\\)")
+
+        return imageRegex.replace(this) { matchResult ->
+            val imageName = matchResult.groupValues[1]
+            val imageUrl = matchResult.groupValues[2]
+            if (imageUrl.startsWith("http")) {
+                "![${imageName}](${imageUrl})"
+            } else {
+                "![${imageName}](${baseUrl}/${imageUrl})"
+            }
+        }
     }
 }
