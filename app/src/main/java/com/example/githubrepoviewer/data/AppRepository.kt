@@ -33,7 +33,7 @@ class AppRepository @Inject constructor(
 
             "" -> readmeResponse.content
             else -> "Unknown encoding"
-        }.replaceMarkdownImageUrls(readmeResponse.downloadUrl)
+        }.replaceMarkdownImageUrls(readmeResponse.downloadUrl).replaceLocalMarkdownLinks()
     }
 
     suspend fun signIn(): UserInfo {
@@ -53,5 +53,9 @@ class AppRepository @Inject constructor(
                 "![${imageName}](${baseUrl}/${imageUrl})"
             }
         }
+    }
+
+    private fun String.replaceLocalMarkdownLinks(): String {
+        return this.replace(Regex("""\[(.*?)]\(#.*?\)"""), "$1")
     }
 }
