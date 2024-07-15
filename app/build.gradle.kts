@@ -67,5 +67,7 @@ dependencies {
 
     implementation(libs.markwon.core)
     implementation(libs.markwon.image)
+    implementation(libs.androidsvg)
+    implementation(libs.android.gif.drawable)
 
 }

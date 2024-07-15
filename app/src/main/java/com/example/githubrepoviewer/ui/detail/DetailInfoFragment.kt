@@ -21,6 +21,8 @@ import com.example.githubrepoviewer.databinding.LayoutSomethingErrorBinding
 import com.example.githubrepoviewer.ui.lifecycleLazy
 import dagger.hilt.android.AndroidEntryPoint
 import io.noties.markwon.Markwon
+import io.noties.markwon.image.ImagesPlugin
+import io.noties.markwon.image.network.OkHttpNetworkSchemeHandler
 
 @AndroidEntryPoint
 class DetailInfoFragment : Fragment() {
@@ -44,7 +46,9 @@ class DetailInfoFragment : Fragment() {
         mutableMapOf<Class<out ViewBinding>, Pair<ViewBinding, Int>>()
 
     private val markwon by lazy {
-        Markwon.builder(requireContext()).build()
+        Markwon.builder(requireContext()).usePlugin(
+                ImagesPlugin.create().addSchemeHandler(OkHttpNetworkSchemeHandler.create())
+            ).build()
     }
 
     private val viewModel: RepositoryInfoViewModel by viewModels()

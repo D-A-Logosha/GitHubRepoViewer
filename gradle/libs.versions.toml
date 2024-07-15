@@ -1,5 +1,5 @@
 [versions]
-agp = "8.5.0"
+agp = "8.5.1"
 coreSplashscreen = "1.0.1"
 hiltAndroid = "2.47"
 kotlin = "1.9.22"
@@ -11,10 +11,12 @@ constraintlayout = "2.1.4"
 navigationFragmentKtx = "2.7.7"
 ksp = "1.9.22-1.0.17"
 kotlinx-serialization = "1.6.0"
-okhttp = "4.11.0"
+okhttp = "4.12.0"
 retrofit = "2.9.0"
 retrofitConverter = "0.8.0"
 markwon = "4.6.2"
+androidGifDrawable = "1.2.28"
+androidsvg = "1.4"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,6 +38,8 @@ retrofit = {group = "com.squareup.retrofit2", name = "retrofit", version.ref = "
 retrofit-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitConverter" }
 markwon-core = { module = "io.noties.markwon:core", version.ref = "markwon" }
 markwon-image = { module = "io.noties.markwon:image", version.ref = "markwon" }
+android-gif-drawable = { module = "pl.droidsonroids.gif:android-gif-drawable", version.ref = "androidGifDrawable" }
+androidsvg = { module = "com.caverock:androidsvg", version.ref = "androidsvg" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
