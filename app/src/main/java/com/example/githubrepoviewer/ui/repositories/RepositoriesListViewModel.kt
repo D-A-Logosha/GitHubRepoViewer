@@ -6,11 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.githubrepoviewer.data.AppRepository
 import com.example.githubrepoviewer.data.model.Repo
+import com.example.githubrepoviewer.data.remote.getErrorMessage
 import com.example.githubrepoviewer.ui.providers.ResourcesProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
@@ -39,6 +41,11 @@ class RepositoriesListViewModel @Inject constructor(
                 val newState = when (e) {
                     is UnknownHostException -> {
                         State.Error("UnknownHostException")
+                    }
+
+                    is HttpException -> {
+                        val errorMessage = e.getErrorMessage()
+                        State.Error("${e.message}: $errorMessage")
                     }
 
                     else -> State.Error("${e.message}")

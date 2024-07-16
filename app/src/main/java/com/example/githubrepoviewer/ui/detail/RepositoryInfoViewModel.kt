@@ -1,17 +1,20 @@
 package com.example.githubrepoviewer.ui.detail
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.githubrepoviewer.data.AppRepository
 import com.example.githubrepoviewer.data.model.RepoDetails
+import com.example.githubrepoviewer.data.remote.getErrorMessage
 import com.example.githubrepoviewer.ui.providers.ResourcesProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.net.UnknownHostException
 import javax.inject.Inject
 
@@ -46,8 +49,14 @@ class RepositoryInfoViewModel @Inject constructor(
                         State.Error("UnknownHostException")
                     }
 
+                    is HttpException -> {
+                        val errorMessage = e.getErrorMessage()
+                        State.Error("${e.message}: $errorMessage")
+                    }
+
                     else -> State.Error("${e.message}")
                 }
+                Log.e("RepositoryInfoViewModel", "e.message", e)
                 _state.postValue(newState)
             }
             loadRepositoryJob = null
@@ -60,8 +69,9 @@ class RepositoryInfoViewModel @Inject constructor(
             loadRepositoryJob?.join()
             while (_state.value !is State.Loaded) delay(0)
             val state = _state.value as State.Loaded
-            if (state.readmeState !is ReadmeState.Loading)
+            if (state.readmeState !is ReadmeState.Loading) {
                 _state.postValue(State.Loaded(state.githubRepo, ReadmeState.Loading))
+            }
             runCatching {
                 appRepository.getRepositoryReadme(repoDetails.owner.login, repoDetails.name)
             }.onSuccess {
@@ -72,6 +82,15 @@ class RepositoryInfoViewModel @Inject constructor(
                 val readmeState = when (e) {
                     is UnknownHostException -> {
                         ReadmeState.Error("UnknownHostException")
+                    }
+
+                    is HttpException -> {
+                        val errorMessage = e.getErrorMessage()
+                        if (e.code() == 404) {
+                            ReadmeState.Empty
+                        } else {
+                            ReadmeState.Error("${e.message}: $errorMessage")
+                        }
                     }
 
                     else -> ReadmeState.Error("${e.message}")

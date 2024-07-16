@@ -6,8 +6,6 @@ import kotlinx.serialization.json.jsonPrimitive
 import retrofit2.HttpException
 
 internal fun HttpException.getErrorMessage(): String? {
-    if (code() != 401) return null
-
     val errorJsonString = response()?.errorBody()?.string()
     return runCatching {
         if (!errorJsonString.isNullOrEmpty()) {
