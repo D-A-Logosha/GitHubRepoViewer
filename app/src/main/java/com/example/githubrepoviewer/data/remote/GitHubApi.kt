@@ -12,6 +12,7 @@ interface GitHubApi {
 
     @GET("user/repos")
     suspend fun getUserRepositories(
+        @Query("sort") sort: String = "updated",
         @Query("page") page: Int = 1,
         @Query("per_page") perPage: Int = 10,
     ): List<Repo>

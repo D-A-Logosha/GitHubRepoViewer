@@ -22,7 +22,7 @@ class RepositoryAdapter(
     RecyclerView.Adapter<RepositoryAdapter.RepositoryViewHolder>(), View.OnClickListener {
 
     var repos: List<Repo> = emptyList()
-        @SuppressLint("NotifyDataSetChanged") set(newValue) {
+        set(newValue) {
             val diffResult = DiffUtil.calculateDiff(RepositoryDiffCallback(field, newValue))
             field = newValue
             diffResult.dispatchUpdatesTo(this)
