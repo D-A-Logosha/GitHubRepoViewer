@@ -102,10 +102,10 @@ class DetailInfoFragment : Fragment() {
                         }
                         detailInfoBinding.tvLink.text = cleanedUrl
                         state.githubRepo.htmlUrl
-                        if (state.githubRepo.license?.isEmpty() != false) {
+                        if (state.githubRepo.license?.key?.isEmpty() != false) {
                             detailInfoBinding.groupLicense.visibility = View.GONE
                         } else {
-                            detailInfoBinding.tvLicense.text = state.githubRepo.license
+                            detailInfoBinding.tvLicense.text = state.githubRepo.license.key
                             detailInfoBinding.groupLicense.visibility = View.VISIBLE
                         }
                         detailInfoBinding.tvStars.text = state.githubRepo.stargazersCount.toString()
