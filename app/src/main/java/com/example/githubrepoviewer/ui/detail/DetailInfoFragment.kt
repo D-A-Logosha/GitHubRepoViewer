@@ -1,5 +1,6 @@
 package com.example.githubrepoviewer.ui.detail
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -98,6 +99,12 @@ class DetailInfoFragment : Fragment() {
 
                     is RepositoryInfoViewModel.State.Loaded -> {
                         val cleanedUrl = Uri.parse(state.githubRepo.htmlUrl).run {
+                            detailInfoBinding.tvLink.setOnClickListener {
+                                val intent = Intent(Intent.ACTION_VIEW, this)
+                                intent.resolveActivity(requireActivity().packageManager
+                                )?.run { startActivity(intent) }
+
+                            }
                             "${host?.takeIf { it.startsWith("www.") }?.substring(4) ?: host}${path}"
                         }
                         detailInfoBinding.tvLink.text = cleanedUrl
