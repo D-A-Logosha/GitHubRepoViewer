@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <!--== link =================================================================================-->
+    <ImageView
+        android:id="@+id/iv_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_link"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_link"
+        app:layout_constraintEnd_toStartOf="@+id/tv_link"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_link" />
+
+    <TextView
+        android:id="@+id/tv_link"
+        style="@style/DetailInfo.Link"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/iv_link"
+        app:layout_constraintTop_toTopOf="parent"
+        tool:text="github.com/icerockdev/moko-resources" />
+    <!--== license ==============================================================================-->
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_license"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:constraint_referenced_ids="iv_license, tv_license_title, tv_license" />
+
+    <ImageView
+        android:id="@+id/iv_license"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_license"
+        app:layout_constraintBottom_toBottomOf="@id/tv_license_title"
+        app:layout_constraintEnd_toStartOf="@+id/tv_license_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_license_title" />
+
+    <TextView
+        android:id="@+id/tv_license_title"
+        style="@style/DetailInfo.License"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/license"
+        app:layout_constraintEnd_toStartOf="@+id/tv_license"
+        app:layout_constraintStart_toEndOf="@+id/iv_license"
+        app:layout_constraintTop_toBottomOf="@id/tv_link" />
+
+    <TextView
+        android:id="@+id/tv_license"
+        style="@style/DetailInfo.License"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="32dp"
+        android:gravity="end"
+        app:layout_constraintBottom_toBottomOf="@id/tv_license_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_license_title"
+        app:layout_constraintTop_toTopOf="@id/tv_license_title"
+        tool:text="Apache-2.0" />
+    <!--== stars ================================================================================-->
+    <ImageView
+        android:id="@+id/iv_stars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_stars"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_stars_title"
+        app:layout_constraintEnd_toStartOf="@+id/tv_stars"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_stars_title" />
+
+    <TextView
+        android:id="@+id/tv_stars"
+        style="@style/DetailInfo.Stars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_stars_title"
+        app:layout_constraintEnd_toStartOf="@+id/tv_stars_title"
+        app:layout_constraintStart_toEndOf="@+id/iv_stars"
+        app:layout_constraintTop_toTopOf="@+id/tv_stars_title"
+        tool:text="123" />
+
+    <TextView
+        android:id="@+id/tv_stars_title"
+        style="@style/DetailInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/stars"
+        app:layout_constraintEnd_toStartOf="@+id/space_iv_forks"
+        app:layout_constraintStart_toEndOf="@+id/tv_stars"
+        app:layout_constraintTop_toBottomOf="@id/tv_license_title" />
+    <!--== forks ================================================================================-->
+    <Space
+        android:id="@+id/space_iv_forks"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_forks_title"
+        app:layout_constraintEnd_toStartOf="@+id/iv_forks"
+        app:layout_constraintStart_toEndOf="@+id/tv_stars_title"
+        app:layout_constraintTop_toTopOf="@+id/tv_forks_title" />
+
+    <ImageView
+        android:id="@+id/iv_forks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_forks"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_forks_title"
+        app:layout_constraintEnd_toStartOf="@+id/tv_forks"
+        app:layout_constraintStart_toEndOf="@+id/space_iv_forks"
+        app:layout_constraintTop_toTopOf="@+id/tv_forks_title" />
+
+    <TextView
+        android:id="@+id/tv_forks"
+        style="@style/DetailInfo.Forks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_forks_title"
+        app:layout_constraintEnd_toStartOf="@+id/tv_forks_title"
+        app:layout_constraintStart_toEndOf="@+id/iv_forks"
+        app:layout_constraintTop_toTopOf="@+id/tv_forks_title"
+        tool:text="456" />
+
+    <TextView
+        android:id="@+id/tv_forks_title"
+        style="@style/DetailInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/forks"
+        app:layout_constraintEnd_toStartOf="@+id/space_iv_watchers"
+        app:layout_constraintStart_toEndOf="@+id/tv_forks"
+        app:layout_constraintTop_toBottomOf="@id/tv_license_title"
+        tool:layout_editor_absoluteY="114dp" />
+    <!--== forks ================================================================================-->
+    <Space
+        android:id="@+id/space_iv_watchers"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_watchers_title"
+        app:layout_constraintEnd_toStartOf="@+id/iv_watchers"
+        app:layout_constraintStart_toEndOf="@+id/tv_forks_title"
+        app:layout_constraintTop_toTopOf="@+id/tv_watchers_title" />
+
+    <ImageView
+        android:id="@+id/iv_watchers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_watchers"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_watchers_title"
+        app:layout_constraintEnd_toStartOf="@+id/tv_watchers"
+        app:layout_constraintStart_toEndOf="@+id/space_iv_watchers"
+        app:layout_constraintTop_toTopOf="@+id/tv_watchers_title" />
+
+    <TextView
+        android:id="@+id/tv_watchers"
+        style="@style/DetailInfo.Watchers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_watchers_title"
+        app:layout_constraintEnd_toStartOf="@+id/tv_watchers_title"
+        app:layout_constraintStart_toEndOf="@+id/iv_watchers"
+        app:layout_constraintTop_toTopOf="@+id/tv_watchers_title"
+        tool:text="789" />
+
+    <TextView
+        android:id="@+id/tv_watchers_title"
+        style="@style/DetailInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/watchers"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_watchers"
+        app:layout_constraintTop_toBottomOf="@id/tv_license_title" />
+    <!--== readme ===============================================================================-->
+    <ViewFlipper
+        android:id="@+id/readme_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:foregroundGravity="left|top"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_stars_title">
+
+        <ProgressBar
+            android:id="@+id/pb_readme"
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+
+        <TextView
+            android:id="@+id/tv_readme"
+            style="@style/DetailInfo.Readme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:text="@string/no_readme" />
+
+    </ViewFlipper>
+</androidx.constraintlayout.widget.ConstraintLayout>

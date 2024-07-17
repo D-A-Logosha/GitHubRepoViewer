@@ -1,3 +1,5 @@
+readme.md
+!main/readme.md
 *.iml
 .gradle
 /local.properties

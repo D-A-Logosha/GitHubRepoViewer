@@ -1,9 +1,130 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.GitHubRepoViewer" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:statusBarColor">@color/status_bar</item>
+        <item name="android:navigationBarColor">@color/status_bar</item>
+        <item name="android:indeterminateTint">@color/white</item>
+        <item name="colorControlNormal">@color/white</item>
     </style>
 
     <style name="Theme.GitHubRepoViewer" parent="Base.Theme.GitHubRepoViewer" />
+
+    <style name="Theme.GitHubRepoViewer.SplashScreen" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_primary</item>
+        <item name="postSplashScreenTheme">@style/Theme.GitHubRepoViewer</item>
+        <item name="android:statusBarColor">@color/status_bar</item>
+        <item name="android:navigationBarColor">@color/status_bar</item>
+    </style>
+
+    <style name="Theme.GitHubRepoViewer.ButtonStyle" parent="Widget.Material3.Button">
+        <item name="cornerRadius">8dp</item>
+        <item name="backgroundTint">@color/accent</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="ThemeOverlay.Material3.Dialog.Alert">
+        <item name="android:background">@color/background</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="colorPrimary">@color/secondary</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="Theme.GitHubRepoViewer.AppBar" parent="Widget.Material3.AppBarLayout">
+        <item name="android:background">@color/status_bar</item>
+        <item name="titleTextColor">@color/white</item>
+        <item name="titleTextAppearance">@style/Theme.GitHubRepoViewer.ToolbarTitle</item>
+    </style>
+
+    <style name="Theme.GitHubRepoViewer.ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="RepositoryItem"></style>
+
+    <style name="RepositoryItem.Name">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/secondary</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="RepositoryItem.Language">
+        <item name="android:textSize">12sp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textColor">@color/error</item>
+    </style>
+
+    <style name="RepositoryItem.Description">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="RepositoryItem.Divider">
+        <item name="android:background">@color/grey</item>
+    </style>
+
+    <style name="Layout">
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="Layout.Title">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/secondary</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Layout.Message">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="Layout.Error"></style>
+
+    <style name="Layout.Error.Title" parent="Layout.Title">
+        <item name="android:textColor">@color/error_title</item>
+    </style>
+
+    <style name="Layout.Error.Message" parent="Layout.Message"></style>
+
+    <style name="DetailInfo">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="DetailInfo.Link">
+        <item name="android:textColor">@color/secondary</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
+        <item name="android:focusable">true</item>
+        <item name="android:focusableInTouchMode">true</item>
+
+    </style>
+
+    <style name="DetailInfo.License">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="DetailInfo.Stars">
+        <item name="android:textColor">@color/stars</item>
+    </style>
+
+    <style name="DetailInfo.Forks">
+        <item name="android:textColor">@color/forks</item>
+    </style>
+
+    <style name="DetailInfo.Watchers">
+        <item name="android:textColor">@color/watchers</item>
+    </style>
+
+    <style name="DetailInfo.Readme">
+        <item name="android:textColor">@color/readme</item>
+    </style>
+
 </resources>

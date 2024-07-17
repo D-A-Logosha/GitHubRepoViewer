@@ -2,4 +2,22 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="accent">#FF438440</color>
+    <color name="background">#FF0D1117</color>
+    <color name="status_bar">#FF161B22</color>
+    <color name="secondary">#FF58A6FF</color>
+    <color name="error">#FFB00020</color>
+    <color name="error_title">#FFCB4F4F</color>
+    <color name="grey">#FF21262D</color>
+    <color name="white_hint">#80FFFFFF</color>
+
+    <color name="semi_transparent_white">#33FFFFFF</color>
+
+    <color name="stars">#FFFAD876</color>
+    <color name="forks">#FF6ED370</color>
+    <color name="watchers">#FF9CFFF9</color>
+    <color name="readme">#B2FFFFFF</color>
+
+
 </resources>

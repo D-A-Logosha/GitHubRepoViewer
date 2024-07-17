@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">GitHubRepoViewer</string>
+    <string name="personal_access_token">Personal access token</string>
+    <string name="invalid_token">Invalid token%1$s</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="invalid_format">Invalid format</string>
+    <string name="too_long">Too long</string>
+    <string name="too_short">Too short</string>
+    <string name="error">Error</string>
+    <string name="information_for_developers">information for developers</string>
+    <string name="repositories">Repositories</string>
+    <string name="logout">logout</string>
+    <string name="connection_error">Connection error</string>
+    <string name="check_your_internet_connection">Check your Internet connection</string>
+    <string name="retry">RETRY</string>
+    <string name="something_error">Something error</string>
+    <string name="check_your_something">Check your something</string>
+    <string name="empty">Empty</string>
+    <string name="no_repositories_at_the_moment">No repositories at the moment</string>
+    <string name="refresh">REFRESH</string>
+    <string name="license">License</string>
+    <string name="stars">stars</string>
+    <string name="forks">forks</string>
+    <string name="watchers">watchers</string>
+    <string name="no_readme">No README.md</string>
 </resources>
