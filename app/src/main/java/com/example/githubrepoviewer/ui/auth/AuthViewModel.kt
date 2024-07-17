@@ -46,6 +46,7 @@ class AuthViewModel @Inject constructor(
 
     fun init() {
         token.value = keyValueStorage.authToken ?: ""
+        if (token.value?.isNotEmpty() == true) onSignButtonPressed()
     }
 
     fun logout() {
@@ -56,7 +57,7 @@ class AuthViewModel @Inject constructor(
 
     fun onSignButtonPressed() {
         if (signInJob != null) return
-        val previousState = _state.value
+        val previousState = _state.value ?: State.Idle
         _state.postValue(State.Loading)
         val token = token.value ?: ""
         signInJob = viewModelScope.launch(Dispatchers.IO) {
